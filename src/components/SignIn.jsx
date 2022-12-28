@@ -1,11 +1,15 @@
-
 import { Text, View, Pressable } from 'react-native';
+import { useNavigate } from 'react-router-native';
 import * as yup from 'yup';
 import FormikTextInput from './helpers/FormikTextInput'
 import { Formik } from 'formik';
+import { useSignIn } from '../hooks/useSignIn'
 import THEME_CONFIG from '../theme';
 
 const SignIn = () => {
+    const navigate = useNavigate();
+    const [signIn] = useSignIn();
+
     const validationSchema = yup.object().shape({
         username: yup
             .string()
@@ -15,10 +19,20 @@ const SignIn = () => {
             .required('Password is required'),
     });
     const initialValues = {
-        username: '',
-        password: ''
+        username: 'kalle',
+        password: 'password'
     }
-    const onSubmit = () => { }
+    const onSubmit = async (values) => {
+        const { username, password } = values;
+        try {
+            const status = await signIn({ username, password });
+            if (status) {
+                navigate('/')
+            }
+        } catch (e) {
+            console.log(e);
+        }
+    }
     return (
         <View style={{
             backgroundColor: THEME_CONFIG.colors.white,

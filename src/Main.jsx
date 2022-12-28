@@ -1,3 +1,4 @@
+import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, View } from 'react-native';
 import { Route, Routes, Navigate } from 'react-router-native';
 
@@ -24,6 +25,7 @@ const Main = () => {
         <Route path="/sign-in" element={<SignIn />} exact />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
+      <StatusBar style="auto" />
     </View>
   );
 };
