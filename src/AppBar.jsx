@@ -3,7 +3,7 @@ import { Link } from "react-router-native";
 import Constants from 'expo-constants';
 import THEME_CONFIG from './theme';
 import { useQuery } from '@apollo/client';
-import { GET_ME } from './graphql/queries'
+import { GET_CURRENT_USER } from './graphql/queries'
 import { useSignOut } from './hooks/useSignOut';
 
 const styles = StyleSheet.create({
@@ -21,7 +21,11 @@ const styles = StyleSheet.create({
 
 const AppBar = () => {
     const [ signOut ] = useSignOut();
-    const { data, loading, error } = useQuery(GET_ME);
+    const { data, loading, error } = useQuery(GET_CURRENT_USER, {
+        variables: {
+            includeReviews: false
+        }
+    });
     if (loading) {
         return null;
     }
@@ -40,13 +44,26 @@ const AppBar = () => {
                     <Text style={styles.press_text}>Repositories</Text>
                 </Link>
                 {data.me ? (
-                    <Pressable onPress={handleSignOut}>
-                        <Text style={styles.press_text}>Sign Out</Text>
-                    </Pressable>
+                    <>
+                        <Link to="/create-new-review">
+                            <Text style={styles.press_text}>Create a review</Text>
+                        </Link>
+                        <Link to="/my-review">
+                            <Text style={styles.press_text}>My reviews</Text>
+                        </Link>
+                        <Pressable onPress={handleSignOut}>
+                            <Text style={styles.press_text}>Sign Out</Text>
+                        </Pressable>
+                    </>
                 ) : (
-                    <Link to="/sign-in">
-                        <Text style={styles.press_text}>Sign In</Text>
-                    </Link>
+                    <>
+                        <Link to="/sign-in">
+                            <Text style={styles.press_text}>Sign In</Text>
+                        </Link>
+                        <Link to="/sign-up">
+                            <Text style={styles.press_text}>Sign Up</Text>
+                        </Link>
+                    </>
                 )}
             </ScrollView>
         </View>

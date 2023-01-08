@@ -1,35 +1,20 @@
-import { Text, FlatList, View, StyleSheet } from 'react-native';
-import RepositoryItem from './RepositoryItem';
+import { Text } from 'react-native';
+import { useState } from 'react';
+import RepositoryListContainer from './RepositoryListContainer';
 import { useRepositories } from '../hooks/useRepositories'
-import THEME_CONFIG from '../theme';
 
-const styles = StyleSheet.create({
-  separator: {
-    height: 10,
-    backgroundColor: THEME_CONFIG.colors.whiteLight
-  },
-});
 
-const ItemSeparator = () => <View style={styles.separator} />;
 
 const RepositoryList = () => {
-  const { repositories, error, loading } = useRepositories()
-  if (loading) {
-    return (
-      <Text>Loading</Text>
-    )
-  }
+  const [searchContent, setSearchContent] = useState('');
+  const { repositories, error, loading } = useRepositories(searchContent);
   if (error) {
     return (
       <Text>Error ...</Text>
     )
   }
   return (
-    <FlatList
-        data={repositories}
-        ItemSeparatorComponent={ItemSeparator}
-        renderItem={({item, index, separators}) => ( <RepositoryItem repository={item} index={index} separators={separators} />)}
-    />
+    <RepositoryListContainer searchContent={searchContent} setSearchContent={setSearchContent} repositories={repositories} />
   );
 };
 
